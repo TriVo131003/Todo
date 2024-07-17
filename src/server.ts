@@ -1,20 +1,16 @@
-import express, { type Express, type Request, type Response } from "express";
+import express, { Request, Response, NextFunction, Express } from "express";
 import { router } from "./routes";
 import { config } from "./config";
+import cookieParser from "cookie-parser";
 
 export const app: Express = express();
 
-app.use(express.json({ limit: "100mb" }));
+app.use(express.json());
+app.use(cookieParser());
 
-app.use((req, res, next) => {
-  const url = req.originalUrl;
-  const urlSplit = url.split("/");
-  next();
-});
+app.use("/api", router);
 
 const PORT = config.port;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-app.use("/api", router);

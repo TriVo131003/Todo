@@ -1,29 +1,29 @@
 import bcrypt from "bcryptjs";
-import { pool } from "../config";
 import { User } from "../schemas/user.schema";
+import * as userSQL from "../sql/user.sql";
+import { BaseModel } from "./base.model";
 
-export const createUser = async (
-  username: string,
-  password: string
-): Promise<User> => {
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const result = await pool.query(
-    "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username",
-    [username, hashedPassword]
-  );
-  return result.rows[0];
-};
+export class UserModel extends BaseModel {
+  public async createUser(
+    username: string,
+    password: string,
+    email: string
+  ): Promise<User> {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const queryConfig = userSQL.createUser(username, hashedPassword, email);
+    const queryResult = await this.query(queryConfig);
+    return queryResult[0] as User;
+  }
 
-export const findUserByUsername = async (
-  username: string
-): Promise<User | null> => {
-  const result = await pool.query("SELECT * FROM users WHERE username = $1", [
-    username,
-  ]);
-  return result.rows.length > 0 ? result.rows[0] : null;
-};
+  public async findUserByUsername(username: string): Promise<User> {
+    const queryConfig = userSQL.getUserByUsername(username);
+    const queryResult = await this.query(queryConfig);
+    return queryResult[0] as User;
+  }
 
-export const findUserById = async (id: number): Promise<User | null> => {
-  const result = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
-  return result.rows.length > 0 ? result.rows[0] : null;
-};
+  public async findUserById(id: number): Promise<User | null> {
+    const queryConfig = userSQL.getUserById(id);
+    const queryResult = await this.query(queryConfig);
+    return queryResult[0] as User;
+  }
+}

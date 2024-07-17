@@ -1,30 +1,46 @@
+import dotenv from "dotenv";
 import { User } from "../schemas/user.schema";
-import { createUser, findUserByUsername } from "../models/user.model";
+import { UserModel } from "../models/user.model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { Pool, PoolClient } from "pg";
 
-const JWT_SECRET = "strongpassword";
+dotenv.config();
 
-export const registerUser = async (
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
+async function registerUser(
   username: string,
-  password: string
-): Promise<User> => {
-  const existingUser = await findUserByUsername(username);
+  password: string,
+  email: string,
+  db: Pool | PoolClient
+): Promise<User> {
+  const userModel = new UserModel(db);
+  const existingUser = await userModel.findUserByUsername(username);
   if (existingUser) {
     throw new Error("User already exists");
   }
-  return await createUser(username, password);
-};
+  return await userModel.createUser(username, password, email);
+}
 
-export const authenticateUser = async (
+const authenticateUser = async (
   username: string,
-  password: string
+  password: string,
+  db: Pool | PoolClient
 ): Promise<string> => {
-  const user = await findUserByUsername(username);
+  const userModel = new UserModel(db);
+  const user = await userModel.findUserByUsername(username);
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
     throw new Error("Invalid username or password");
   }
   return jwt.sign({ id: user.user_id, username: user.username }, JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "30m",
   });
 };
+
+const userService = {
+  registerUser,
+  authenticateUser,
+};
+
+export default userService;
