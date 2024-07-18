@@ -1,7 +1,7 @@
 CREATE TABLE users (
     user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -57,3 +57,9 @@ CREATE TABLE todo_log (
 
 INSERT INTO roles (role_name) VALUES ('admin');
 INSERT INTO roles (role_name) VALUES ('user');
+
+INSERT INTO users (username, email, password_hash) 
+VALUES ('admin', 'admin@admin.com', '$2a$10$EcAM22N3EjiXngkV1J5ZMOuVao7mmXnPnBC95WFpBY1n.48r6uzQe');
+
+INSERT INTO user_roles(user_id, role_id);
+VALUES (1,1);
