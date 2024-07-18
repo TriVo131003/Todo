@@ -8,7 +8,7 @@ export async function addTodo(req: Request, res: Response) {
     const user = await TodoService.addTodo(title, description, pool);
     res.status(201).json(user);
   } catch (error) {
-    res.status(400).json({ error: "register fail" });
+    res.status(400).json({ error: "add todo fail" });
   }
 }
 
@@ -23,6 +23,15 @@ export async function updateTodo(req: Request, res: Response) {
       isCompleted,
       pool
     );
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(400).json({ error: "register fail" });
+  }
+}
+
+export async function getTodoList(req: Request, res: Response) {
+  try {
+    const user = await TodoService.getTodoList(pool);
     res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ error: "register fail" });

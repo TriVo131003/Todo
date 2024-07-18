@@ -14,6 +14,12 @@ export class TodoModel extends BaseModel {
     return queryResult[0] as Todo;
   }
 
+  public async getTodoList(): Promise<Todo[]> {
+    const queryConfig = TodoSQL.getTodoList();
+    const queryResult = await this.query(queryConfig);
+    return queryResult as Todo[];
+  }
+
   public async deleteTodo(id: number): Promise<Todo | null> {
     const queryConfig = TodoSQL.deleteTodo(id);
     const queryResult = await this.query(queryConfig);

@@ -11,6 +11,12 @@ export class AssignmentModel extends BaseModel {
     return queryResult[0] as Assignment;
   }
 
+  public async getAllAssignment(): Promise<Assignment[]> {
+    const queryConfig = AssignmentSQL.getAllAssignment();
+    const queryResult = await this.query(queryConfig);
+    return queryResult as Assignment[];
+  }
+
   public async findAssignmentById(id: number): Promise<Assignment | null> {
     const queryConfig = AssignmentSQL.getAssignmentById(id);
     const queryResult = await this.query(queryConfig);

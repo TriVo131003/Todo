@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { User } from "../schemas/user.schema";
+import { User, UserInfo } from "../schemas/user.schema";
 import { UserModel } from "../models/user.model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -14,13 +14,15 @@ async function registerUser(
   password: string,
   email: string,
   db: Pool | PoolClient
-): Promise<User> {
+): Promise<void> {
   const userModel = new UserModel(db);
   const existingUser = await userModel.findUserByUsername(username);
   if (existingUser) {
     throw new Error("User already exists");
   }
-  return await userModel.createUser(username, password, email);
+  await userModel.createUser(username, password, email);
+  const user = await userModel.findUserByUsername(username);
+  await userModel.assignRole(user.user_id);
 }
 
 const authenticateUser = async (
@@ -38,9 +40,21 @@ const authenticateUser = async (
   });
 };
 
+async function getUserInfor(
+  username: string,
+  db: Pool | PoolClient
+): Promise<UserInfo> {
+  const userModel = new UserModel(db);
+  const user: User = await userModel.findUserByUsername(username);
+  console.log(user);
+  const role: string = await userModel.getRoleByUserId(user.user_id);
+  return new UserInfo(user, role);
+}
+
 const userService = {
   registerUser,
   authenticateUser,
+  getUserInfor,
 };
 
 export default userService;

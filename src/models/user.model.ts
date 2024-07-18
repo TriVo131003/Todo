@@ -21,9 +21,22 @@ export class UserModel extends BaseModel {
     return queryResult[0] as User;
   }
 
-  public async findUserById(id: number): Promise<User | null> {
+  public async findUserById(id: number): Promise<User> {
     const queryConfig = userSQL.getUserById(id);
     const queryResult = await this.query(queryConfig);
+    console.log(queryResult);
     return queryResult[0] as User;
+  }
+
+  public async getRoleByUserId(id: number): Promise<string> {
+    const queryConfig = userSQL.getUserRoleNameByUserId(id);
+    const queryResult = await this.query(queryConfig);
+    return queryResult[0].role_name;
+  }
+
+  public async assignRole(id: number): Promise<string> {
+    const queryConfig = userSQL.assignRole(id, 2);
+    const queryResult = await this.query(queryConfig);
+    return queryResult[0] as string;
   }
 }
