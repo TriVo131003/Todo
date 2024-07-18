@@ -30,6 +30,12 @@ router.put("/todo/:id", authenticateJWT, todoController.updateTodo);
 router.delete("/todo/:id", authenticateJWT, todoController.deleteTodo);
 
 router.get(
+  "/users/:userId/todos",
+  authenticateJWT,
+  todoController.getTodosByUserId
+);
+
+router.get(
   "/assignment/",
   authenticateJWT,
   assignmentController.getAllAssignment

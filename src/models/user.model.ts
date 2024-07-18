@@ -24,7 +24,6 @@ export class UserModel extends BaseModel {
   public async findUserById(id: number): Promise<User> {
     const queryConfig = userSQL.getUserById(id);
     const queryResult = await this.query(queryConfig);
-    console.log(queryResult);
     return queryResult[0] as User;
   }
 

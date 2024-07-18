@@ -11,7 +11,7 @@ export const signup = async (req: Request, res: Response) => {
       email,
       pool
     );
-    res.status(201).json(user);
+    res.status(201).json({ message: "Signup successful", user });
   } catch (error) {
     res.status(400).json({ error: "register fail" });
   }
@@ -25,7 +25,7 @@ export const login = async (req: Request, res: Response) => {
       httpOnly: true,
       sameSite: "strict",
     });
-    res.json({ message: "Login successful", token });
+    res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     res.status(400).json({ error: "login fail" });
   }
@@ -37,5 +37,14 @@ export async function logout(req: Request, res: Response) {
       httpOnly: true,
       sameSite: "strict",
     };
-  res.status(201).json({ message: "Logout successful" });
+  res.status(200).json({ message: "Logout successful" });
+}
+
+export async function getUserInfor(req: Request, res: Response) {
+  try {
+    const info = await userService.getUserInfor(req.params.username, pool);
+    res.status(200).json({ info });
+  } catch (error) {
+    res.status(400).json({ error: "load info fail" });
+  }
 }

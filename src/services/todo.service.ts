@@ -29,9 +29,9 @@ async function updateTodo(
   description: string,
   isCompleted: boolean,
   db: Pool | PoolClient
-): Promise<void> {
+): Promise<Todo> {
   const todoModel = new TodoModel(db);
-  await todoModel.updateTodo(
+  return await todoModel.updateTodo(
     todoId,
     title,
     description,
@@ -42,9 +42,17 @@ async function updateTodo(
 async function deleteTodo(
   todoId: number,
   db: Pool | PoolClient
-): Promise<void> {
+): Promise<Todo> {
   const todoModel = new TodoModel(db);
-  await todoModel.deleteTodo(todoId);
+  return await todoModel.deleteTodo(todoId);
+}
+
+async function getTodosByUserId(
+  userId: number,
+  db: Pool | PoolClient
+): Promise<Todo[]> {
+  const todoModel = new TodoModel(db);
+  return await todoModel.findTodosByUserId(userId);
 }
 
 const TodoService = {
@@ -53,6 +61,7 @@ const TodoService = {
   updateTodo,
   deleteTodo,
   getTodoList,
+  getTodosByUserId,
 };
 
 export default TodoService;

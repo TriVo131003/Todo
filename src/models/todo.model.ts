@@ -20,7 +20,7 @@ export class TodoModel extends BaseModel {
     return queryResult as Todo[];
   }
 
-  public async deleteTodo(id: number): Promise<Todo | null> {
+  public async deleteTodo(id: number): Promise<Todo> {
     const queryConfig = TodoSQL.deleteTodo(id);
     const queryResult = await this.query(queryConfig);
     return queryResult[0] as Todo;
@@ -31,7 +31,7 @@ export class TodoModel extends BaseModel {
     title?: string,
     description?: string,
     is_completed?: string
-  ): Promise<Todo | null> {
+  ): Promise<Todo> {
     const queryConfig = TodoSQL.updateTodo(
       todoId,
       title,
@@ -40,5 +40,11 @@ export class TodoModel extends BaseModel {
     );
     const queryResult = await this.query(queryConfig);
     return queryResult[0] as Todo;
+  }
+
+  public async findTodosByUserId(userId: number): Promise<Todo[]> {
+    const queryConfig = TodoSQL.getTodosByUserId(userId);
+    const queryResult = await this.query(queryConfig);
+    return queryResult as Todo[];
   }
 }

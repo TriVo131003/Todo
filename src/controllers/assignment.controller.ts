@@ -11,7 +11,10 @@ export async function addAssignment(req: Request, res: Response) {
       userId,
       pool
     );
-    res.status(StatusCodes.CREATED).json(assignment);
+    res.status(StatusCodes.CREATED).json({
+      message: "Assignment added successfully",
+      assignment,
+    });
   } catch (error) {
     res
       .status(StatusCodes.BAD_REQUEST)
@@ -22,7 +25,6 @@ export async function addAssignment(req: Request, res: Response) {
 export async function getAllAssignment(req: Request, res: Response) {
   try {
     const assignments = await AssignmentService.getAllAssignment(pool);
-
     res.status(StatusCodes.OK).json(assignments);
   } catch (error) {
     res
@@ -61,7 +63,10 @@ export async function updateAssignment(req: Request, res: Response) {
       pool
     );
     if (assignment) {
-      res.status(StatusCodes.OK).json(assignment);
+      res.status(StatusCodes.OK).json({
+        message: "Assignment updated successfully",
+        assignment,
+      });
     } else {
       res.status(StatusCodes.NOT_FOUND).json({ error: "Assignment not found" });
     }
@@ -81,7 +86,9 @@ export async function deleteAssignment(req: Request, res: Response) {
       pool
     );
     if (assignment) {
-      res.status(StatusCodes.OK).json(assignment);
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "Assignment deleted successfully" });
     } else {
       res.status(StatusCodes.NOT_FOUND).json({ error: "Assignment not found" });
     }

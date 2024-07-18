@@ -46,7 +46,6 @@ async function getUserInfor(
 ): Promise<UserInfo> {
   const userModel = new UserModel(db);
   const user: User = await userModel.findUserByUsername(username);
-  console.log(user);
   const role: string = await userModel.getRoleByUserId(user.user_id);
   return new UserInfo(user, role);
 }
