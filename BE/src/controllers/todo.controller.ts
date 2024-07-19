@@ -4,9 +4,9 @@ import TodoService from "../services/todo.service";
 import { StatusCodes } from "http-status-codes";
 
 export async function addTodo(req: Request, res: Response) {
-  const { title, description } = req.body;
+  const { title, description, create_by } = req.body;
   try {
-    const todo = await TodoService.addTodo(title, description, pool);
+    const todo = await TodoService.addTodo(title, description, create_by, pool);
     res.status(StatusCodes.CREATED).json({
       message: "Todo added successfully",
       todo,
@@ -19,13 +19,14 @@ export async function addTodo(req: Request, res: Response) {
 
 export async function updateTodo(req: Request, res: Response) {
   const todoId = req.params.id;
-  const { title, description, isCompleted } = req.body;
+  const { title, description, isCompleted, update_by } = req.body;
   try {
     const todo = await TodoService.updateTodo(
       Number(todoId),
       title,
       description,
       isCompleted,
+      update_by,
       pool
     );
     res.status(StatusCodes.OK).json({

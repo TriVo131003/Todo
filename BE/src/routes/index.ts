@@ -199,6 +199,8 @@ router.get("/todo/:id", authenticateJWT, todoController.getTodoById);
  *                 type: string
  *               description:
  *                 type: string
+ *               create_by:
+ *                 type: number
  *     parameters:
  *       - in: header
  *         name: Cookie
@@ -245,6 +247,8 @@ router.post("/todo", authenticateJWT, todoController.addTodo);
  *                 type: string
  *               description:
  *                 type: string
+ *               update_by:
+ *                 type: number
  *     responses:
  *       200:
  *         description: Successfully updated to-do
@@ -409,6 +413,8 @@ router.get(
  *                 type: integer
  *               userId:
  *                 type: integer
+ *               create_by:
+ *                 type: number
  *     responses:
  *       201:
  *         description: Successfully created an assignment
@@ -453,6 +459,8 @@ router.post(
  *                 type: integer
  *               userId:
  *                 type: integer
+ *               update_by:
+ *                 type: number
  *     responses:
  *       200:
  *         description: Successfully updated the assignment

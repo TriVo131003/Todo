@@ -1,8 +1,12 @@
 import knex from "knex";
 import { QueryConfig } from "pg";
 
-export function createAssignment(todoId: number, userId: number): QueryConfig {
-  const assigned_at = new Date().toISOString();
+export function createAssignment(
+  todoId: number,
+  userId: number,
+  create_by: number
+): QueryConfig {
+  const created_at = new Date().toISOString();
   const query = knex({
     client: "pg",
   })
@@ -10,7 +14,8 @@ export function createAssignment(todoId: number, userId: number): QueryConfig {
     .insert({
       todo_id: todoId,
       user_id: userId,
-      assigned_at,
+      created_at,
+      create_by,
     })
     .returning(["*"])
     .toSQL()
@@ -27,7 +32,7 @@ export function getAllAssignment(): QueryConfig {
     client: "pg",
   })
     .from("assignments")
-    .select("assignment_id AS id", "todo_id", "user_id", "assigned_at")
+    .select("*")
     .toSQL()
     .toNative();
 
@@ -56,16 +61,19 @@ export function getAssignmentById(assignmentId: number): QueryConfig {
 export function updateAssignment(
   assignmentId: number,
   todoId?: number,
-  userId?: number
+  userId?: number,
+  update_by?: number
 ): QueryConfig {
   const updateData: {
     todo_id?: number;
     user_id?: number;
-    assigned_at?: string;
+    update_by?: number;
+    updated_at?: string;
   } = {};
   if (todoId) updateData.todo_id = todoId;
   if (userId) updateData.user_id = userId;
-  updateData.assigned_at = new Date().toISOString();
+  updateData.updated_at = new Date().toISOString();
+  updateData.update_by = update_by;
 
   const query = knex({
     client: "pg",
@@ -73,7 +81,7 @@ export function updateAssignment(
     .table("assignments")
     .where("assignment_id", assignmentId)
     .update(updateData)
-    .returning(["assignment_id AS id", "todo_id", "user_id", "assigned_at"])
+    .returning(["*"])
     .toSQL()
     .toNative();
 

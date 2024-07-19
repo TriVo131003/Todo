@@ -4,11 +4,12 @@ import AssignmentService from "../services/assignment.service";
 import { StatusCodes } from "http-status-codes";
 
 export async function addAssignment(req: Request, res: Response) {
-  const { todoId, userId } = req.body;
+  const { todoId, userId, create_by } = req.body;
   try {
     const assignment = await AssignmentService.addAssignment(
       todoId,
       userId,
+      create_by,
       pool
     );
     res.status(StatusCodes.CREATED).json({
@@ -54,14 +55,16 @@ export async function getAssignmentById(req: Request, res: Response) {
 
 export async function updateAssignment(req: Request, res: Response) {
   const assignmentId = req.params.id;
-  const { todoId, userId } = req.body;
+  const { todoId, userId, update_by } = req.body;
   try {
     const assignment = await AssignmentService.updateAssignment(
       Number(assignmentId),
       todoId,
       userId,
+      update_by,
       pool
     );
+
     if (assignment) {
       res.status(StatusCodes.OK).json({
         message: "Assignment updated successfully",

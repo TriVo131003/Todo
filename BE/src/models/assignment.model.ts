@@ -4,9 +4,14 @@ import * as AssignmentSQL from "../sql/assignment.sql";
 export class AssignmentModel extends BaseModel {
   public async createAssignment(
     todoId: number,
-    userId: number
+    userId: number,
+    create_by: number
   ): Promise<Assignment> {
-    const queryConfig = AssignmentSQL.createAssignment(todoId, userId);
+    const queryConfig = AssignmentSQL.createAssignment(
+      todoId,
+      userId,
+      create_by
+    );
     const queryResult = await this.query(queryConfig);
     return queryResult[0] as Assignment;
   }
@@ -32,12 +37,14 @@ export class AssignmentModel extends BaseModel {
   public async updateAssignment(
     assignmentId: number,
     todoId?: number,
-    userId?: number
+    userId?: number,
+    update_by?: number
   ): Promise<Assignment | null> {
     const queryConfig = AssignmentSQL.updateAssignment(
       assignmentId,
       todoId,
-      userId
+      userId,
+      update_by
     );
     const queryResult = await this.query(queryConfig);
     return queryResult[0] as Assignment;

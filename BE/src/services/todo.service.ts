@@ -4,10 +4,11 @@ import { TodoModel } from "../models/todo.model";
 async function addTodo(
   title: string,
   description: string,
+  create_by: number,
   db: Pool | PoolClient
 ): Promise<Todo> {
   const todoModel = new TodoModel(db);
-  return await todoModel.createTodo(title, description);
+  return await todoModel.createTodo(title, description, create_by);
 }
 
 async function getTodoById(
@@ -28,6 +29,7 @@ async function updateTodo(
   title: string,
   description: string,
   isCompleted: boolean,
+  update_by: number,
   db: Pool | PoolClient
 ): Promise<Todo> {
   const todoModel = new TodoModel(db);
@@ -35,7 +37,8 @@ async function updateTodo(
     todoId,
     title,
     description,
-    isCompleted ? "true" : "false"
+    isCompleted ? "true" : "false",
+    update_by
   );
 }
 

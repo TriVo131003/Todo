@@ -1,7 +1,11 @@
 import knex from "knex";
 import { QueryConfig } from "pg";
 
-export function createTodo(title: string, description: string): QueryConfig {
+export function createTodo(
+  title: string,
+  description: string,
+  create_by: number
+): QueryConfig {
   const createdAt = new Date().toISOString();
   const query = knex({
     client: "pg",
@@ -10,6 +14,7 @@ export function createTodo(title: string, description: string): QueryConfig {
     .insert({
       title,
       description,
+      create_by: create_by,
       created_at: createdAt,
     })
     .returning(["*"])
@@ -57,18 +62,21 @@ export function updateTodo(
   todoId: number,
   title?: string,
   description?: string,
-  is_completed?: string
+  is_completed?: string,
+  update_by?: number
 ): QueryConfig {
   const updateData: {
     title?: string;
     description?: string;
     is_completed?: string;
     updated_at?: string;
+    update_by?: number;
   } = {};
   if (title) updateData.title = title;
   if (description) updateData.description = description;
   if (is_completed) updateData.is_completed = is_completed;
   updateData.updated_at = new Date().toISOString();
+  updateData.update_by = update_by;
   const query = knex({
     client: "pg",
   })
